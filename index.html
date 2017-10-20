@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.background {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    display: block;
+    background-image: url("background-silver.jpg");
+    filter: brightness(0.5);
+    height: 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+} 
+body {
+} 
+</style>
+  <title>Voting</title>
+</head>
+<body>
+  <div class="background"></div>
+  <div id="drawing"></div>
+  <script type="text/javascript" src="svg.js"></script>
+  <script type="text/javascript">
+  	function entry(draw, flag, name, score) {
+
+	    var nested = draw.nested()
+		
+		grad = nested.gradient('radial', function(stop) {
+			  stop.at(0, '#444')
+			  stop.at(1, '#aaa')
+			})
+
+
+//		if (name=="Australia")
+//			nested.image('texture2.jpg', 560, 64).attr({ fill: grad, opacity: 0.1 })
+
+    	nested.rect(560, 64).attr({ fill: grad, opacity: 0.3 })
+
+		nested.image('flag/' + flag)
+			.move(2,0)
+        nested.text(name)
+			.font({ family: 'Helvetica', size: 40, weight: 'normal'})
+			.move(64+30,10)
+			.fill('#fff')
+
+		nested.text(score)
+			.font({ family: 'Helvetica', size: 40, weight: 'normal' })
+			.move(500,10)
+			.fill('#fff')
+
+
+		return nested;
+	}
+
+  	if (SVG.supported) {
+  		var draw = SVG('drawing').size(1920, 1080)
+
+	    var group1 = draw.nested().attr({ x: 100, y: 100 })
+
+		var au = entry(group1, 'AU.png', 'Australia', '65')     .attr({ x: 0, y: 0 })
+		var cz = entry(group1, 'CZ.png', 'Czech Republic', '35').attr({ x: 0, y: 80 })
+		var es = entry(group1, 'ES.png', 'Spain', '33')         .attr({ x: 0, y: 160 })
+		var fr = entry(group1, 'FR.png', 'France', '31')        .attr({ x: 0, y: 240 })
+		var ca = entry(group1, 'CA.png', 'Canada', '26')        .attr({ x: 0, y: 320 })
+		var fr = entry(group1, 'BR.png', 'Brazil', '25')        .attr({ x: 0, y: 400 })
+
+	    var group2 = draw.nested().attr({ x: 750, y: 100 })
+
+		var gr = entry(group2, 'GR.png', 'Greece', '24')         .attr({ x: 0, y: 0 })
+		var il = entry(group2, 'IL.png', 'Israel', '21')         .attr({ x: 0, y: 80 })
+		var ie = entry(group2, 'IE.png', 'Ireland', '19')        .attr({ x: 0, y: 160 })
+		var gb = entry(group2, 'GB.png', 'United Kingdom', '18') .attr({ x: 0, y: 240 })
+		var ie = entry(group2, 'IT.png', 'Italy', '16')          .attr({ x: 0, y: 320 })
+		var cn = entry(group2, 'CN.png', 'China', '11')          .attr({ x: 0, y: 400 })
+	}
+</script>
+</body>
+</html>
