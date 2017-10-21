@@ -10,13 +10,13 @@
     display: block;
     background-image: url("background-silver.jpg");
     filter: brightness(0.5);
-    height: 100%; 
+    height: 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-} 
+}
 body {
-} 
+}
 </style>
   <title>Voting</title>
 </head>
@@ -25,58 +25,98 @@ body {
   <div id="drawing"></div>
   <script type="text/javascript" src="svg.js"></script>
   <script type="text/javascript">
-  	function entry(draw, flag, name, score) {
 
-	    var nested = draw.nested()
-		
-		grad = nested.gradient('radial', function(stop) {
-			  stop.at(0, '#444')
-			  stop.at(1, '#aaa')
-			})
+    var draw
 
+    var votes = [
+        { flag: "HU", name: "Hungary",        votes: 54 },
+        { flag: "DE", name: "Germany",        votes: 58 },
+        { flag: "SE", name: "Sweden",         votes: 63 },
+        { flag: "PL", name: "Poland",         votes: 61 },
+        { flag: "GR", name: "Greece",         votes: 59 },
+        { flag: "IT", name: "Italy",          votes: 69 },
+        { flag: "IE", name: "Ireland",        votes: 73 },
+        { flag: "GB", name: "United Kingdom", votes: 51 },
+        { flag: "IS", name: "Iceland",        votes: 72 },
+        { flag: "RU", name: "Russia",         votes: 67 },
+        { flag: "NO", name: "Norway",         votes: 23 }
+        ]
 
-//		if (name=="Australia")
-//			nested.image('texture2.jpg', 560, 64).attr({ fill: grad, opacity: 0.1 })
+    var items = {}
 
-    	nested.rect(560, 64).attr({ fill: grad, opacity: 0.3 })
+    /* Populate the per-country SVG group */
+    function country(draw, flag, name, score) {
 
-		nested.image('flag/' + flag)
-			.move(2,0)
+        var nested = draw.nested()
+
+        grad = nested.gradient('radial', function(stop) {
+              stop.at(0, '#444')
+              stop.at(1, '#aaa')
+            })
+
+        nested.rect(560, 64).attr({ fill: grad, opacity: 0.3 })
+
+        nested.image('flag/' + flag + ".png")
+            .move(20,0)
         nested.text(name)
-			.font({ family: 'Helvetica', size: 40, weight: 'normal'})
-			.move(64+30,10)
-			.fill('#fff')
+            .font({ family: 'Helvetica', size: 40, weight: 'normal'})
+            .move(64+40,10)
+            .fill('#fff')
 
-		nested.text(score)
-			.font({ family: 'Helvetica', size: 40, weight: 'normal' })
-			.move(500,10)
-			.fill('#fff')
+        nested.text(score)
+            .id(flag + '_score')
+            .font({ family: 'Helvetica', size: 40, weight: 'normal', anchor: 'end' })
+            .move(540,10)
+            .fill('#fff')
 
+        return nested
+    }
 
-		return nested;
-	}
+    /* Initialise SVG and items, given initial votes */
+    function init(draw, votes, items) {
+        votes.sort(function(a, b){return b.votes-a.votes});
+        for (var i = 0; i < votes.length && i < 6; i++) {
+            items[votes[i].flag] =
+                country(draw, votes[i].flag, votes[i].name, votes[i].votes.toString())
+                .attr({ x: 80, y: 100+i*80, 'opacity': 0.0 })
+                .animate(2000, '>', 300*i).attr({ 'opacity': 1.0 })
+        }
 
-  	if (SVG.supported) {
-  		var draw = SVG('drawing').size(1920, 1080)
+        for (var i = 6; i < 12 && i < votes.length; i++) {
+            items[votes[i].flag] =
+                country(draw, votes[i].flag, votes[i].name, votes[i].votes.toString())
+                .attr({ x: 750, y: 100+(i-6)*80, 'opacity': 0.0 })
+                .animate(2000, '>', 300*i).attr({ 'opacity': 1.0 })
+        }
+    }
 
-	    var group1 = draw.nested().attr({ x: 100, y: 100 })
+    /* Update SVG given updated votes */
+    function update(draw, votes, items) {
+        votes.sort(function(a, b){return b.votes-a.votes});
+        for (var i = 0; i < votes.length && i < 6; i++) {
+            SVG.get(votes[i].flag + '_score').text(votes[i].votes.toString())
+            items[votes[i].flag].animate(1000, '<>').move(80, 100+i*80)
+        }
 
-		var au = entry(group1, 'AU.png', 'Australia', '65')     .attr({ x: 0, y: 0 })
-		var cz = entry(group1, 'CZ.png', 'Czech Republic', '35').attr({ x: 0, y: 80 })
-		var es = entry(group1, 'ES.png', 'Spain', '33')         .attr({ x: 0, y: 160 })
-		var fr = entry(group1, 'FR.png', 'France', '31')        .attr({ x: 0, y: 240 })
-		var ca = entry(group1, 'CA.png', 'Canada', '26')        .attr({ x: 0, y: 320 })
-		var fr = entry(group1, 'BR.png', 'Brazil', '25')        .attr({ x: 0, y: 400 })
+        for (var i = 6; i < 12 && i < votes.length; i++) {
+            SVG.get(votes[i].flag + '_score').text(votes[i].votes.toString())
+            items[votes[i].flag].animate(1000, '<>').move(750, 100+(i-6)*80)
+        }
+    }
 
-	    var group2 = draw.nested().attr({ x: 750, y: 100 })
+    function modify() {
+        votes[Math.floor(Math.random()*votes.length)].votes += 10
+        votes[Math.floor(Math.random()*votes.length)].votes += 5
+        votes[Math.floor(Math.random()*votes.length)].votes += 2
+        update(draw, votes, items)
+        setTimeout(modify, 2000)
+    }
 
-		var gr = entry(group2, 'GR.png', 'Greece', '24')         .attr({ x: 0, y: 0 })
-		var il = entry(group2, 'IL.png', 'Israel', '21')         .attr({ x: 0, y: 80 })
-		var ie = entry(group2, 'IE.png', 'Ireland', '19')        .attr({ x: 0, y: 160 })
-		var gb = entry(group2, 'GB.png', 'United Kingdom', '18') .attr({ x: 0, y: 240 })
-		var ie = entry(group2, 'IT.png', 'Italy', '16')          .attr({ x: 0, y: 320 })
-		var cn = entry(group2, 'CN.png', 'China', '11')          .attr({ x: 0, y: 400 })
-	}
+    if (SVG.supported) {
+        draw = SVG('drawing').size(1920, 1080)
+        init(draw, votes, items)
+        modify()
+    }
 </script>
 </body>
 </html>
