@@ -114,7 +114,36 @@ body {
 
     if (SVG.supported) {
         draw = SVG('drawing').size(1920, 1080)
+        fill = draw.rect(1920, 1080).attr({ fill: '#000', opacity: 0.0 }).move(0,0)
         init(draw, votes, items)
+
+        document.onkeypress = function(event){
+            /* Show the votes */
+            if (event.key=='1')
+            {
+                for (var i = 0; i < votes.length; i++)
+                    items[votes[i].flag]
+                        .animate(1000, '>', 100*i).attr({ 'opacity': 1.0 })
+            }
+            /* Hide the votes */
+            if (event.key=='2')
+            {
+                for (var i = 0; i < votes.length; i++)
+                    items[votes[i].flag]
+                        .animate(1000, '>', 100*(votes.length-i)).attr({ 'opacity': 0.0 })
+            }
+            /* Show the background */
+            if (event.key=='3')
+            {
+                fill.animate(1000, '<>', 100*(votes.length-i)).attr({ 'opacity': 0.0 })
+            }
+            /* Hide the background */
+            if (event.key=='4')
+            {
+                fill.animate(1000, '<>', 100*(votes.length-i)).attr({ 'opacity': 1.0 })
+            }
+        };
+
         modify()
     }
 </script>
