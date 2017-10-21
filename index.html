@@ -50,12 +50,10 @@ body {
       return 0;
     }
 
-    var items = {}
-
     /* Populate the per-country SVG group */
     function country(draw, flag, name, score) {
 
-        var nested = draw.nested()
+        var nested = draw.nested().id(flag)
 
         grad = nested.gradient('radial', function(stop) {
               stop.at(0, '#444')
@@ -92,37 +90,35 @@ body {
         return nested
     }
 
-    /* Initialise SVG and items, given initial votes */
-    function init(draw, votes, items) {
+    /* Initialise SVG, given initial votes */
+    function init(draw, votes) {
         votes.sort(compare);
         for (var i = 0; i < votes.length && i < 6; i++) {
-            items[votes[i].flag] =
-                country(draw, votes[i].flag, votes[i].name, votes[i].votes.toString())
-                .attr({ x: 80, y: 100+i*80, 'opacity': 0.0 })
-                .animate(2000, '>', 300*i).attr({ 'opacity': 1.0 })
+            country(draw, votes[i].flag, votes[i].name, votes[i].votes.toString())
+            .attr({ x: 80, y: 100+i*80, 'opacity': 0.0 })
+            .animate(2000, '>', 300*i).attr({ 'opacity': 1.0 })
         }
 
         for (var i = 6; i < 12 && i < votes.length; i++) {
-            items[votes[i].flag] =
-                country(draw, votes[i].flag, votes[i].name, votes[i].votes.toString())
-                .attr({ x: 750, y: 100+(i-6)*80, 'opacity': 0.0 })
-                .animate(2000, '>', 300*i).attr({ 'opacity': 1.0 })
+            country(draw, votes[i].flag, votes[i].name, votes[i].votes.toString())
+            .attr({ x: 750, y: 100+(i-6)*80, 'opacity': 0.0 })
+            .animate(2000, '>', 300*i).attr({ 'opacity': 1.0 })
         }
     }
 
     /* Update SVG given updated votes */
-    function update(draw, votes, items) {
+    function update(draw, votes) {
         votes.sort(compare);
         for (var i = 0; i < votes.length && i < 6; i++) {
             SVG.get(votes[i].flag + '_score').text(votes[i].votes.toString())
             SVG.get(votes[i].flag + '_score_shadow').text(votes[i].votes.toString())
-            items[votes[i].flag].animate(1000, '<>').move(80, 100+i*80)
+            SVG.get(votes[i].flag).animate(1000, '<>').move(80, 100+i*80)
         }
 
         for (var i = 6; i < 12 && i < votes.length; i++) {
             SVG.get(votes[i].flag + '_score').text(votes[i].votes.toString())
             SVG.get(votes[i].flag + '_score_shadow').text(votes[i].votes.toString())
-            items[votes[i].flag].animate(1000, '<>').move(750, 100+(i-6)*80)
+            SVG.get(votes[i].flag).animate(1000, '<>').move(750, 100+(i-6)*80)
         }
     }
 
@@ -130,28 +126,28 @@ body {
         votes[Math.floor(Math.random()*votes.length)].votes += 10
         votes[Math.floor(Math.random()*votes.length)].votes += 5
         votes[Math.floor(Math.random()*votes.length)].votes += 2
-        update(draw, votes, items)
+        update(draw, votes)
         setTimeout(modify, 2000)
     }
 
     if (SVG.supported) {
         draw = SVG('drawing').size(1920, 1080)
         fill = draw.rect(1920, 1080).attr({ fill: '#000', opacity: 0.0 }).move(0,0)
-        init(draw, votes, items)
+        init(draw, votes)
 
         document.onkeypress = function(event){
             /* Show the votes */
             if (event.key=='1')
             {
                 for (var i = 0; i < votes.length; i++)
-                    items[votes[i].flag]
+                    SVG.get(votes[i].flag)
                         .animate(1000, '>', 100*i).attr({ 'opacity': 1.0 })
             }
             /* Hide the votes */
             if (event.key=='2')
             {
                 for (var i = 0; i < votes.length; i++)
-                    items[votes[i].flag]
+                    SVG.get(votes[i].flag)
                         .animate(1000, '<', 100*(votes.length-i)).attr({ 'opacity': 0.0 })
             }
             /* Show the background */
