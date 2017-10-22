@@ -22,6 +22,7 @@ video {
     z-index: -100;
     display: block;
     filter: brightness(0.8);
+    filter: contrast(0.7) brightness(0.8) grayscale(0.5) hue-rotate(20deg);
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -38,7 +39,7 @@ div#drawing {
 </head>
 <body>
   <video autoplay muted loop poster="background/polygon.jpg" id="video">
-    <source src="background/polygon.mp4" type="video/mp4">
+    <source src="background/polygon.mp4" type="video/mp4" id="background">
   </video>
   <div id="drawing"></div>
   <script type="text/javascript" src="svg.js"></script>
@@ -187,6 +188,10 @@ div#drawing {
         };
 
         modify()
+
+        video = document.getElementById("video");
+        video.playbackRate = 0.125;
+
     }
 </script>
 </body>
