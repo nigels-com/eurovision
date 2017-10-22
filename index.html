@@ -15,13 +15,27 @@
     background-repeat: no-repeat;
     background-size: cover;
 }
+video { 
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: -100;
+    display: block;
+    filter: brightness(0.8);
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
 body {
 }
 </style>
   <title>Voting</title>
 </head>
 <body>
-  <div class="background"></div>
+  <video autoplay muted loop poster="background/polygon.jpg">
+    <source src="background/polygon.mp4" type="video/mp4" id="video">
+  </video>
   <div id="drawing"></div>
   <script type="text/javascript" src="svg.js"></script>
   <script type="text/javascript">
@@ -127,7 +141,7 @@ body {
         votes[Math.floor(Math.random()*votes.length)].votes += 5
         votes[Math.floor(Math.random()*votes.length)].votes += 2
         update(draw, votes)
-        setTimeout(modify, 2000)
+        setTimeout(modify, 4000)
     }
 
     if (SVG.supported) {
