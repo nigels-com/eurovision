@@ -27,7 +27,11 @@ video {
     background-repeat: no-repeat;
     background-size: cover;
 }
-body {
+div#drawing {
+    position: fixed;
+    left: 0;
+    right: 0;
+    display: block;
 }
 </style>
   <title>Voting</title>
@@ -155,7 +159,7 @@ body {
             {
                 for (var i = 0; i < votes.length; i++)
                     SVG.get(votes[i].flag)
-                        .animate(1000, '>', 100*i).attr({ 'opacity': 1.0 })
+                        .animate(2000, '>', 100*i).attr({ 'opacity': 1.0 })
             }
             /* Hide the votes */
             if (event.key=='2')
@@ -172,7 +176,7 @@ body {
             /* Hide the background */
             if (event.key=='4')
             {
-                fill.animate(1000, '<>', 100*(votes.length-i)).attr({ 'opacity': 1.0 })
+                fill.animate(2000, '<>', 100*(votes.length-i)).attr({ 'opacity': 1.0 })
             }
         };
 
