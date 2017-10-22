@@ -37,8 +37,8 @@ div#drawing {
   <title>Voting</title>
 </head>
 <body>
-  <video autoplay muted loop poster="background/polygon.jpg">
-    <source src="background/polygon.mp4" type="video/mp4" id="video">
+  <video autoplay muted loop poster="background/polygon.jpg" id="video">
+    <source src="background/polygon.mp4" type="video/mp4">
   </video>
   <div id="drawing"></div>
   <script type="text/javascript" src="svg.js"></script>
@@ -177,6 +177,12 @@ div#drawing {
             if (event.key=='4')
             {
                 fill.animate(2000, '<>', 100*(votes.length-i)).attr({ 'opacity': 1.0 })
+            }
+
+            if (event.key==' ')
+            {
+                video = document.getElementById("video");
+                if (video.paused) { video.play(); } else { video.pause(); }
             }
         };
 

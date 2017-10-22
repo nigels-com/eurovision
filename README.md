@@ -8,3 +8,4 @@
 * 2 Hide Votes
 * 3 Show Background
 * 4 Hide Background
+* Space Pause Video
