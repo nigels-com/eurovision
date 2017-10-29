@@ -1,0 +1,13 @@
+[
+    { "flag": "HU", "name": "Hungary",        "votes": 94 },
+    { "flag": "DE", "name": "Germany",        "votes": 10 },
+    { "flag": "SE", "name": "Sweden",         "votes": 88 },
+    { "flag": "PL", "name": "Poland",         "votes": 65 },
+    { "flag": "GR", "name": "Greece",         "votes": 23 },
+    { "flag": "IT", "name": "Italy",          "votes": 85 },
+    { "flag": "IE", "name": "Ireland",        "votes": 87 },
+    { "flag": "GB", "name": "United Kingdom", "votes": 18 },
+    { "flag": "IS", "name": "Iceland",        "votes": 91 },
+    { "flag": "RU", "name": "Russia",         "votes": 86 },
+    { "flag": "NO", "name": "Norway",         "votes": 21 }
+]
