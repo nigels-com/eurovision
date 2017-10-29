@@ -20,7 +20,7 @@ needed during the show.
 
 3. Run the web server: `$ python MultithreadedSimpleHTTPServer.py`
 
-4. Browse to: `http://localhost:8000/index.html`
+4. Browse to: [http://localhost:8000/index.html](http://localhost:8000/index.html)
 
 # Keyboard Controls
 

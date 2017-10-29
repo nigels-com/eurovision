@@ -15,51 +15,74 @@
     background-repeat: no-repeat;
     background-size: cover;
 }
-video { 
-    position: fixed;
-    left: 0;
-    right: 0;
+video#video { 
     z-index: -100;
-    display: block;
+    position: fixed;
+    top: 50%; left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
     filter: brightness(0.8);
     filter: contrast(0.7) brightness(0.8) grayscale(0.5) hue-rotate(20deg);
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+}
+video#frontvideo {
+    z-index: 100;
+    position: fixed;
+    top: 50%; left: 50%;
+    min-width: 80%;
+    min-height: 80%;
+    width: 80%;
+    height: 80%;
+    transform: translate(-50%, -50%);
 }
 div#drawing {
+    z-index: 1;
     position: fixed;
-    left: 0;
-    right: 0;
-    display: block;
+    top: 50%; left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
 }
 </style>
   <title>Voting</title>
 </head>
-<body>
+<body bgcolor="#000">
   <video autoplay muted loop poster="background/polygon.jpg" id="video">
     <source src="background/polygon.mp4" type="video/mp4" id="background">
   </video>
+  <video id="frontvideo">
+    <source type="video/mp4" id="frontsource">
+  </video>
   <div id="drawing"></div>
+  <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="svg.js"></script>
   <script type="text/javascript">
 
+    var votes = []
+
+    function refresh() {
+        $.getJSON( "votes.json", {"_" : new Date().getTime()}, function( data ) { 
+            data.sort(compare)
+            if (JSON.stringify(votes) != JSON.stringify(data))
+            {
+                votes = data;
+                update(draw, votes);
+            } 
+        });
+        setTimeout(refresh, 100); 
+    }
+
+    jQuery.ajaxSetup({async:false});
+    $.getJSON( "votes.json", {_: new Date().getTime()}, function( data ) { votes = data; });
+    jQuery.ajaxSetup({async:true});
+
     var draw
 
-    var votes = [
-        { flag: "HU", name: "Hungary",        votes: 54 },
-        { flag: "DE", name: "Germany",        votes: 58 },
-        { flag: "SE", name: "Sweden",         votes: 63 },
-        { flag: "PL", name: "Poland",         votes: 61 },
-        { flag: "GR", name: "Greece",         votes: 59 },
-        { flag: "IT", name: "Italy",          votes: 69 },
-        { flag: "IE", name: "Ireland",        votes: 73 },
-        { flag: "GB", name: "United Kingdom", votes: 51 },
-        { flag: "IS", name: "Iceland",        votes: 72 },
-        { flag: "RU", name: "Russia",         votes: 67 },
-        { flag: "NO", name: "Norway",         votes: 23 }
-        ]
+    var count = null;
 
     function compare(a, b) {
       if (a.votes>b.votes) { return -1; }
@@ -150,18 +173,75 @@ div#drawing {
         }
     }
 
+    /* Function for counting down from count to zero: 10, 9, 8, ... 0 */
+    function tick() {
+        if (count!=null)
+        {
+            count = count - 1
+            countdown.stop(false)
+            countdown.attr({ 'opacity': 0.0 })
+            SVG.get('countdown_text').text((count).toString());
+            SVG.get('countdown_text_shadow').text((count).toString());
+            countdown.animate(800, '<>').attr({ 'opacity': 1.0 })
+            if (count==0)
+            {
+                count = null;
+            }
+        }
+        setTimeout(tick, 1000); 
+    }
+
+    /* Function for randomly adding votes every few seconds, forever */
     function modify() {
-        votes[Math.floor(Math.random()*votes.length)].votes += 10
-        votes[Math.floor(Math.random()*votes.length)].votes += 5
+        votes[Math.floor(Math.random()*votes.length)].votes += 3
         votes[Math.floor(Math.random()*votes.length)].votes += 2
+        votes[Math.floor(Math.random()*votes.length)].votes += 1
         update(draw, votes)
         setTimeout(modify, 2000)
+    }
+
+    function preloadImages(array) {
+        if (!preloadImages.list) {
+            preloadImages.list = [];
+        }
+        var list = preloadImages.list;
+        for (var i = 0; i < array.length; i++) {
+            var img = new Image();
+            img.onload = function() {
+                var index = list.indexOf(this);
+                if (index !== -1) {
+                    // remove image from the array once it's loaded
+                    // for memory consumption reasons
+                    list.splice(index, 1);
+                }
+            }
+            list.push(img);
+            img.src = array[i];
+        }
     }
 
     if (SVG.supported) {
         draw = SVG('drawing').size(1920, 1080)
         fill = draw.rect(1920, 1080).attr({ fill: '#000', opacity: 0.0 }).move(0,0)
+
         init(draw, votes)
+
+        var countdown = draw.nested().id('countdown').attr({ opacity: 0.0 })
+
+        countdown.text('10')
+            .id('countdown_text')
+            .font({ family: 'Helvetica', size: 700, weight: 'normal', anchor: 'middle' })
+            .move(703,3)
+            .attr({ fill: '#000'})
+
+        countdown.text('10')
+            .id('countdown_text_shadow')
+            .font({ family: 'Helvetica', size: 700, weight: 'normal', anchor: 'middle' })
+            .move(700,0)
+            .attr({ fill: '#fff'})
+
+
+        preloadImages(["clips/GuySebastian.jpg", "clips/DamiIm-SoundOfSilence.jpg", "clips/Isaiah-DontComeEasy.jpg"]);
 
         document.onkeypress = function(event){
             /* Show the votes */
@@ -189,18 +269,107 @@ div#drawing {
                 fill.animate(2000, '<>', 100*(votes.length-i)).attr({ 'opacity': 1.0 })
             }
 
+            /* Show the countdown */
+            if (event.key=='5')
+            {
+                count = 21;
+            }
+            /* Hide the countdown */
+            if (event.key=='6')
+            {
+                count = null;
+                countdown.stop(false).animate(100, '<>').attr({ 'opacity': 0.0 })
+            }
+
+            if (event.key=='7')
+            {
+                video = document.getElementById("frontvideo");
+                if (video.paused)
+                { 
+                    video.poster = "clips/GuySebastian.jpg";
+                    source = document.getElementById('frontsource');
+                    source.src = 'clips/GuySebastian.webm';
+
+                    video.style.opacity = 1; 
+                    video.currentTime = 0;
+                    video.load();
+                    video.play();
+                    video.addEventListener('ended', function( data ) { 
+                        video.style.opacity = 0;
+                        } ,false);
+                } 
+                else 
+                { 
+                    video.style.opacity = 0;
+                    video.pause(); 
+                }
+            }
+
+            if (event.key=='8')
+            {
+                video = document.getElementById("frontvideo");
+                if (video.paused)
+                { 
+                    video.poster = "clips/DamiIm-SoundOfSilence.jpg";
+                    source = document.getElementById('frontsource');
+                    source.src = 'clips/DamiIm-SoundOfSilence.webm';
+
+                    video.style.opacity = 1; 
+                    video.currentTime = 0;
+                    video.load();
+                    video.play();
+                    video.addEventListener('ended', function( data ) { 
+                        video.style.opacity = 0;
+                        } ,false);
+                } 
+                else 
+                { 
+                    video.style.opacity = 0;
+                    video.pause(); 
+                }
+            }
+
+            if (event.key=='9')
+            {
+                video = document.getElementById("frontvideo");
+                if (video.paused)
+                { 
+                    video.poster = "clips/Isaiah-DontComeEasy.jpg";
+                    source = document.getElementById('frontsource');
+                    source.src = 'clips/Isaiah-DontComeEasy.webm';
+
+                    video.style.opacity = 1; 
+                    video.currentTime = 0;
+                    video.load();
+                    video.play();
+                    video.addEventListener('ended', function( data ) { 
+                        video.style.opacity = 0;
+                        } ,false);
+                } 
+                else 
+                { 
+                    video.style.opacity = 0;
+                    video.pause(); 
+                }
+            }
+
             if (event.key==' ')
             {
                 video = document.getElementById("video");
                 if (video.paused) { video.play(); } else { video.pause(); }
+            }
+
+            if (event.key=='r')
+            {
+                // setTimeout(modify, 5000);
             }
         };
 
         video = document.getElementById("video");
         video.playbackRate = 0.500;
 
-        setTimeout(modify, 5000)
-
+        setTimeout(tick, 0);
+        setTimeout(refresh, 200); 
     }
 </script>
 </body>
