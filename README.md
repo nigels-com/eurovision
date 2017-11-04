@@ -22,6 +22,8 @@ needed during the show.
 
 4. Browse to: [http://localhost:8000/index.html](http://localhost:8000/index.html)
 
+5. Adjust votes at the CLI: `$ bin/vote.py -c Iceland -v +10`
+
 # Keyboard Controls
 
   - **1** Show Votes
