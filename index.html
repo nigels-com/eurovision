@@ -26,6 +26,7 @@ video#video {
     transform: translate(-50%, -50%);
     filter: brightness(0.8);
     filter: contrast(0.7) brightness(0.8) grayscale(0.5) hue-rotate(20deg);
+    filter: contrast(0.8) brightness(0.6) grayscale(0.2) hue-rotate(-10deg);
 }
 video#frontvideo {
     z-index: 100;
@@ -366,7 +367,7 @@ div#drawing {
         };
 
         video = document.getElementById("video");
-        video.playbackRate = 0.500;
+        video.playbackRate = 0.250;
 
         setTimeout(tick, 0);
         setTimeout(refresh, 200); 
