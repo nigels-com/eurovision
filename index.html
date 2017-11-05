@@ -2,19 +2,6 @@
 <html>
 <head>
 <style>
-.background {
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: -1;
-    display: block;
-    background-image: url("background-silver.jpg");
-    filter: brightness(0.5);
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
 video#video { 
     z-index: -100;
     position: fixed;
@@ -24,18 +11,26 @@ video#video {
     width: 100%;
     height: 100%;
     transform: translate(-50%, -50%);
-    filter: brightness(0.8);
-    filter: contrast(0.7) brightness(0.8) grayscale(0.5) hue-rotate(20deg);
     filter: contrast(0.8) brightness(0.6) grayscale(0.2) hue-rotate(-10deg);
+}
+img#mask { 
+    z-index: 200;
+    position: fixed;
+    top: 50%; left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
 }
 video#frontvideo {
     z-index: 100;
     position: fixed;
     top: 50%; left: 50%;
-    min-width: 80%;
-    min-height: 80%;
-    width: 80%;
-    height: 80%;
+    min-width: 90%;
+    min-height: 90%;
+    width: 90%;
+    height: 90%;
     transform: translate(-50%, -50%);
 }
 div#drawing {
@@ -55,6 +50,7 @@ div#drawing {
   <video autoplay muted loop poster="background/polygon.jpg" id="video">
     <source src="background/polygon.mp4" type="video/mp4" id="background">
   </video>
+  <img src="mask/transparent.png" id="mask"/>
   <video id="frontvideo">
     <source type="video/mp4" id="frontsource">
   </video>
@@ -83,6 +79,10 @@ div#drawing {
 
     var draw
 
+    // For fine-tuning the placement of the votes
+    var x = 50;
+    var y = 100; 
+
     var count = null;
 
     function compare(a, b) {
@@ -96,8 +96,8 @@ div#drawing {
     /* Populate the per-country SVG group */
     function country(draw, flag, name, score) {
 
-        var outer = draw.nested().id(flag)
-        var inner = outer.nested().id(flag + '_fade')
+        var outer = draw.nested().id(flag);
+        var inner = outer.nested().id(flag + '_fade').attr({ 'opacity': 0.0 }).move(x, y);
 
         grad = inner.gradient('radial', function(stop) {
               stop.at(0, '#444')
@@ -164,13 +164,13 @@ div#drawing {
         for (var i = 0; i < votes.length && i < 6; i++) {
             SVG.get(votes[i].flag + '_score').text(votes[i].votes.toString())
             SVG.get(votes[i].flag + '_score_shadow').text(votes[i].votes.toString())
-            animatedMove(SVG.get(votes[i].flag), 1000, 80, 100+i*80)
+            animatedMove(SVG.get(votes[i].flag), 1000, x, y+i*80)
         }
 
         for (var i = 6; i < 12 && i < votes.length; i++) {
             SVG.get(votes[i].flag + '_score').text(votes[i].votes.toString())
             SVG.get(votes[i].flag + '_score_shadow').text(votes[i].votes.toString())
-            animatedMove(SVG.get(votes[i].flag), 1000, 750, 100+(i-6)*80)
+            animatedMove(SVG.get(votes[i].flag), 1000, x+630, y+(i-6)*80)
         }
     }
 
@@ -232,13 +232,13 @@ div#drawing {
         countdown.text('10')
             .id('countdown_text')
             .font({ family: 'Helvetica', size: 700, weight: 'normal', anchor: 'middle' })
-            .move(703,3)
+            .move(703,50+3)
             .attr({ fill: '#000'})
 
         countdown.text('10')
             .id('countdown_text_shadow')
             .font({ family: 'Helvetica', size: 700, weight: 'normal', anchor: 'middle' })
-            .move(700,0)
+            .move(700,50+0)
             .attr({ fill: '#fff'})
 
 
@@ -328,6 +328,66 @@ div#drawing {
                     video.style.opacity = 0;
                     video.pause(); 
                 }
+            }
+
+            if (event.key=='<')
+            {
+                mask = document.getElementById("mask");
+                mask.src = 'mask/songcontest.png';
+            }
+
+            if (event.key=='>')
+            {
+                mask = document.getElementById("mask");
+                mask.src = 'mask/songcontest2.png';
+            }
+
+            if (event.key=='?')
+            {
+                mask = document.getElementById("mask");
+                mask.src = 'mask/transparent.png';
+            }
+
+            if (event.key=='[')
+            {
+                mask = document.getElementById("mask");
+                mask.src = 'mask/titlesmall.png';
+            }
+
+            if (event.key==']')
+            {
+                mask = document.getElementById("mask");
+                mask.src = 'mask/titlelarge.png';
+            }
+
+            if (event.key==',')
+            {
+                video = document.getElementById("video");
+                video.style = "filter: contrast(0.5) brightness(0.3) grayscale(0.5) hue-rotate(-10deg);";
+            }
+
+            if (event.key=='.')
+            {
+                video = document.getElementById("video");
+                video.style = "filter: contrast(0.8) brightness(0.6) grayscale(0.2) hue-rotate(-10deg);";
+            }
+
+            if (event.key=='/')
+            {
+                video = document.getElementById("video");
+                video.style = "filter: contrast(0.7) brightness(1.5) hue-rotate(20deg);";
+            }
+
+            if (event.key==':')
+            {
+                video = document.getElementById("video");
+                video.playbackRate = 1.0;
+            }
+
+            if (event.key==';')
+            {
+                video = document.getElementById("video");
+                video.playbackRate = 0.250;
             }
 
             if (event.key=='9')
