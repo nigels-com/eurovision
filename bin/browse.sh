@@ -6,5 +6,5 @@
 # - Force fullscreen
 #
 
-DISPLAY=:0 chromium-browser -kiosk -fullscreen $*
+DISPLAY=:0 chromium-browser -kiosk -fullscreen --incognito $*
 
