@@ -8,5 +8,5 @@
 # - Exit once finished
 #
 
-DISPLAY=:0 stdbuf -o 10MB ffplay -fs -x 1920 -y 1080 -autoexit -noborder - < $*
+DISPLAY=:0 stdbuf -o 10MB ffplay -fs -x 1920 -y 1200 -autoexit -noborder - < $*
 
