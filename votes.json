@@ -1,13 +1,1 @@
-[
-    { "flag": "HU", "name": "Hungary",        "votes": 0 },
-    { "flag": "DE", "name": "Germany",        "votes": 0 },
-    { "flag": "SE", "name": "Sweden",         "votes": 0 },
-    { "flag": "PL", "name": "Poland",         "votes": 0 },
-    { "flag": "GR", "name": "Greece",         "votes": 0 },
-    { "flag": "IT", "name": "Italy",          "votes": 0 },
-    { "flag": "IE", "name": "Ireland",        "votes": 0 },
-    { "flag": "GB", "name": "United Kingdom", "votes": 0 },
-    { "flag": "IS", "name": "Iceland",        "votes": 0 },
-    { "flag": "RU", "name": "Russia",         "votes": 0 },
-    { "flag": "NO", "name": "Norway",         "votes": 0 }
-]
+[{"flag": "HU", "name": "Hungary", "votes": 21}, {"flag": "DE", "name": "Germany", "votes": 25}, {"flag": "SE", "name": "Sweden", "votes": 24}, {"flag": "PL", "name": "Poland", "votes": 16}, {"flag": "GR", "name": "Greece", "votes": 18}, {"flag": "IT", "name": "Italy", "votes": 36}, {"flag": "IE", "name": "Ireland", "votes": 29}, {"flag": "GB", "name": "United Kingdom", "votes": 22}, {"flag": "IS", "name": "Iceland", "votes": 37}, {"flag": "RU", "name": "Russia", "votes": 25}, {"flag": "NO", "name": "Norway", "votes": 22}]
