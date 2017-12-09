@@ -12,6 +12,14 @@ needed during the show.
 
 [Live Preview](https://cdn.rawgit.com/nigels-com/eurovision/master/index.html)
 
+The page updates the votes every few seconds, with animated transitions as
+countries move up and down according to the tally.
+
+This was used for a local production of [Song Contest](http://www.songcontest-musical.com/)
+by [Sandgate Theatre Inc](http://www.sandgatetheatre.net/) in December 2017.
+Many thanks to the organisers, crew and cast of the show for such a memorable
+experience.  Greece, you are soul.  Iceland, I was born for this.  Norway, REVOLUTION!
+
 # Instructions
 
 1. Clone from github: `$ git clone https://github.com/nigels-com/eurovision.git`
