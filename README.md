@@ -42,3 +42,9 @@ National flags courtesy of [Go Squared](https://www.gosquared.com),
 [2600 Flag Icon Set](https://www.gosquared.com/resources/flag-icons/)
 
 Python multi-threaded web server: [Nakiami/MultithreadedSimpleHTTPServer](https://github.com/Nakiami/MultithreadedSimpleHTTPServer).
+
+Using [JQuery](https://jquery.com/) Javascript library for loading JSON votes.
+
+Using [SVG.js](http://svgjs.com/) Javascript for flag/country/vote display and animation.
+
+Using [ffplay](https://www.ffmpeg.org/) video player for live-crosses.
